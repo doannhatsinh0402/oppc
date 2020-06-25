@@ -34,8 +34,8 @@ int main()
     MT x,y,r,s;
     VT u;
     cin>>x;
-    x= !x; 
-    cout<<x; 
+    y= !x; 
+    cout<<y; 
     return 0; 
 }
 void EnterArr(MT &x)
@@ -67,15 +67,19 @@ ostream& operator<<(ostream& os, MT x)
 {
    cout<<"Matrix: "<<endl; 
    for(int i =1 ; i<=x.lv;i++)
+   {
        for(int j =1;j<=x.lv;j++)
-           cout<<x.PT[i][j]<<setw(3);
+           os<<x.PT[i][j]<<" ";
+        cout<<endl;
+   }
     return os;
 }
 ostream& operator<<(ostream& os,VT x)
 {
     cout<<"Vector: "<<endl; 
     for(int i = 1 ; i<=x.lv;i++)
-        cout<<x.PTV[i]<<setw(3);
+        os<<x.PTV[i]<<setw(3);
+    cout<<endl;
     return os; 
 }
 void SetMatrix(MT &T, int xflag, int yflag, MT x)
@@ -91,13 +95,13 @@ void SetMatrix(MT &T, int xflag, int yflag, MT x)
         }
        ++xT; 
    } 
+   T.lv = x.lv  - 1;
 }
 int Det(MT x)
 {
     if(x.lv == 2)
         return  x.PT[1][1]*x.PT[2][2]-x.PT[1][2]*x.PT[2][1];
     MT T;
-    T.lv = x.lv - 1;
     static int i = 1; 
        for(int j =1;j<=x.lv;j++) 
         { 
@@ -109,8 +113,9 @@ int Det(MT x)
 void Tranposition(MT &xTra, MT x)
 {
     MT T;
+    xTra.lv = x.lv;
     for(int i =1;i<=x.lv;i++)
-       for(int j =1;j<=x.lv;i++)
+       for(int j =1;j<=x.lv;j++)
        {
             SetMatrix(T,i,j,x);     
             xTra.PT[i][j] = x.PT[i][j]*pow(-1,i+j)*Det(T);  
@@ -123,6 +128,7 @@ MT operator*(MT x, MT y)
         for(int i = 1;i<=x.lv;i++)
             for(int j =1;j<=y.lv;j++)
                t.PT[i][j] = x.PT[i][j]*y.PT[j][i]; 
+    t.lv = x.lv;
     return t; 
 }   
 MT operator*(float nB, MT x)
@@ -131,12 +137,14 @@ MT operator*(float nB, MT x)
     for(int i =1;i<=x.lv;i++)
         for(int j =1;j<=x.lv;j++)
             t.PT[i][j] = nB*x.PT[i][j];
+    t.lv = x.lv;
     return t; 
 }
 MT operator!(MT x)
 {
     MT y,xTra;
+    xTra.lv = x.lv;
     Tranposition(xTra,x); 
-    y = (1/Det(x))*xTra;
+    y = float(1/Det(x))*xTra;
     return y; 
 } 
